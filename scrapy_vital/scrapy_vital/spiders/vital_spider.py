@@ -57,6 +57,6 @@ class VitalSpider(CrawlSpider):
         df['user_name'] = user_name
         # write to csv
         file_name = bike_id
-        path = '/opt/data/raw_files/'
-        export_path = os.path.join(path, file_name + '.csv')
+        path = '/home/ec2-user/data/raw_files'
+        export_path = os.path.join(path, file_name + '_setup.csv')
         df.to_csv (path_or_buf = export_path, index = False, header=True)
