@@ -63,5 +63,4 @@ class VitalSpider(CrawlSpider):
         file_name = bike_id
         file_name = file_name + '_setup.csv'
         with s3.open(f'{BUCKET_NAME}/{file_name}','w') as f:
-            df.to_csv(f)
             df.to_csv (f, index = False, header=True)
