@@ -7,7 +7,11 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from IPython.display import display_html
 import os
+import s3fs
 
+#setting s3 bucket name variable
+BUCKET_NAME = "bucketrawvitalfiles"
+s3 = s3fs.S3FileSystem(anon=False)
 
 
 class QuotesSpider(scrapy.Spider):
@@ -49,6 +53,6 @@ class QuotesSpider(scrapy.Spider):
         df['user_name'] = user_name
         # write to csv
         file_name = bike_id
-        path = '/Users/keithanderson/Desktop/Testing/Final'
-        export_path = os.path.join(path, file_name + '.csv')
-        df.to_csv (path_or_buf = export_path, index = False, header=True)
+        file_name = (file_name + '_setup.csv')
+        with s3.open(f'{BUCKET_NAME}/{file_name}','w') as f:
+            df.to_csv (f, index = False, header=True)

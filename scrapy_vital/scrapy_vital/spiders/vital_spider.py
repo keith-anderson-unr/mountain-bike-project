@@ -6,7 +6,11 @@ from scrapy.linkextractors import LinkExtractor
 from bs4 import BeautifulSoup
 import os
 import pandas as pd
+import s3fs
 
+#setting s3 bucket name variable
+BUCKET_NAME = "bucketrawvitalfiles"
+s3 = s3fs.S3FileSystem(anon=False)
 
 
 class ScraperItem(scrapy.Item):
@@ -55,8 +59,9 @@ class VitalSpider(CrawlSpider):
         df['riding_type'] = riding_type_text
         df['user_id'] = user_id
         df['user_name'] = user_name
-        # write to csv
+        # write to csv in s3 Bucket with AWS CLI
         file_name = bike_id
-        path = '/home/ec2-user/data/raw_files'
-        export_path = os.path.join(path, file_name + '_setup.csv')
-        df.to_csv (path_or_buf = export_path, index = False, header=True)
+        file_name = file_name + '_setup.csv'
+        with s3.open(f'{BUCKET_NAME}/{file_name}','w') as f:
+            df.to_csv(f)
+            df.to_csv (f, index = False, header=True)
